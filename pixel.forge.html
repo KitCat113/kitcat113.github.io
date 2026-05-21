@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Forge | Cursos de Desenvolvimento de Games</title>
+    <style>
+        /* --- VARIÁVEIS DE COR (Para facilitar mudanças) --- */
+        :root {
+            --bg-dark: #0d0e15;
+            --bg-card: #181a26;
+            --primary: #8b5cf6; /* Roxo Neon */
+            --secondary: #06b6d4; /* Ciano */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        /* --- CONFIGURAÇÕES GERAIS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- MENU DE NAVEGAÇÃO --- */
+        header {
+            background-color: rgba(13, 14, 21, 0.95);
+            border-bottom: 1px solid #23263a;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+        }
+
+        /* --- SEÇÃO HERO (BOAS-VINDAS) --- */
+        .hero {
+            padding: 180px 0 100px 0;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(139, 92, 246, 0.15), transparent 60%);
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 14px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.6);
+        }
+
+        /* --- SEÇÃO DE CURSOS --- */
+        .courses-section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* Filtros com JS */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            background-color: var(--bg-card);
+            border: 1px solid #23263a;
+            color: var(--text-main);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Grid de Cards */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .course-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #23263a;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+        }
+
+        /* Thumbnail simulada com CSS */
+        .course-thumb {
+            height: 180px;
+            background: linear-gradient(135deg, #1e1b4b, #311042);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .course-thumb::after {
+            content: "🎮";
+            font-size: 50px;
+        }
+
+        .course-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-design { color: var(--secondary); }
+        .badge-code { color: var(--primary); }
+
+        .course-info {
+            padding: 25px;
+        }
+
+        .course-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .course-info p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+            height: 44px; /* Mantém alinhamento */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .course-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #23263a;
+            padding-top: 15px;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .enroll-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .enroll-link:hover {
+            text-decoration: underline;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #08090d;
+            border-top: 1px solid #23263a;
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* --- RESPONSIVIDADE BÁSICA --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            nav { display: none; } /* Simplificação para mobile no projeto */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV BAR -->
+    <header>
+        <div class="container">
+            <div class="logo">PIXEL FORGE</div>
+            <nav>
+                <a href="#inicio">Início</a>
+                <a href="#cursos">Cursos</a>
+                <a href="#sobre">Sobre</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="inicio">
+        <div class="container">
+            <h1>Forje o Seu Próprio <span>Universo Gamer</span></h1>
+            <p>Aprenda programação, arte 3D e game design com profissionais do mercado. Do zero ao seu primeiro jogo publicado.</p>
+            <a href="#cursos" class="btn">Conhecer Cursos</a>
+        </div>
+    </section>
+
+    <!-- CURSES SECTION -->
+    <section class="courses-section" id="cursos">
+        <div class="container">
+            <h2 class="section-title">Nossas Trilhas de Aprendizado</h2>
+            
+            <!-- Botões de Filtro (Interação com JS) -->
+            <div class="filter-container">
+                <button class="filter-btn active" onclick="filterCourses('todos', this)">Todos</button>
+                <button class="filter-btn" onclick="filterCourses('programacao', this)">Programação</button>
+                <button class="filter-btn" onclick="filterCourses('design', this)">Arte & Design</button>
+            </div>
+
+            <!-- Grid de Cursos -->
+            <div class="courses-grid">
+                
+                <!-- Card 1 -->
+                <div class="course-card" data-category="programacao">
+                    <div class="course-thumb">
+                        <span class="course-badge badge-code">Programação</span>
+                    </div>
+                    <div class="course-info">
+                        <h3>Mastering Unity 2D & 3D</h3>
+                        <p>Domine a engine mais popular do mercado usando C# e crie mecânicas complexas.</p>
+                        <div class="course-footer">
+                            <span class="price">R$ 49,90/mês</span>
+                            <a href="#" class="enroll-link">Saber mais →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="course-card" data-category="design">
+                    <div class="course-thumb" style="background: linear-gradient(135deg, #115e59, #1e3a8a);">
+                        <span class="course-badge badge-design">Arte & Design</span>
+                    </div>
+                    <div class="course-info">
+                        <h3>Modelagem 3D para Games</h3>
+                        <p>Aprenda Blender do zero: crie cenários, personagens e texturas profissionais.</p>
+                        <div class="course-footer">
+                            <span class="price">R$ 45,90/mês</span>
+                            <a href="#" class="enroll-link">Saber mais →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="course-card" data-category="programacao">
+                    <div class="course-thumb" style="background: linear-gradient(135deg, #581c87, #0369a1);">
+                        <span class="course-badge badge-code">Programação</span>
+                    </div>
+                    <div class="course-info">
+                        <h3>Unreal Engine Blueprints</h3>
+                        <p>Crie jogos de alta performance sem escrever uma linha de código usando lógica visual.</p>
+                        <div class="course-footer">
+                            <span class="price">R$ 59,90/mês</span>
+                            <a href="#" class="enroll-link">Saber mais →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="course-card" data-category="design">
+                    <div class="course-thumb" style="background: linear-gradient(135deg, #831843, #4c1d95);">
+                        <span class="course-badge badge-design">Arte & Design</span>
+                    </div>
+                    <div class="course-info">
+                        <h3>Concept Art e Pixel Art</h3>
+                        <p>Dê vida às suas ideias desenhando personagens marcantes e cenários expressivos.</p>
+                        <div class="course-footer">
+                            <span class="price">R$ 39,90/mês</span>
+                            <a href="#" class="enroll-link">Saber mais →</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Pixel Forge Academy. Projeto Escolar - Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        function filterCourses(category, button) {
+            // 1. Atualiza o botão ativo visualmente
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // 2. Filtra os cards logicamente
+            const cards = document.querySelectorAll('.course-card');
+            
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                
+                if (category === 'todos' || cardCategory === category) {
+                    card.style.display = 'block'; // Mostra o card
+                } else {
+                    card.style.display = 'none'; // Esconde o card
+                }
+            });
+        }
+    </script>
+</body>
+</html>
